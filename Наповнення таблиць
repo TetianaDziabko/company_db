@@ -1,0 +1,217 @@
+-- Наповнення таблиці Department
+INSERT INTO dbo.Department 
+VALUES ('Department of Innovation and Development', 'DID');
+
+INSERT INTO dbo.Department 
+VALUES ('Customer Experience Enhancement Division', 'CEED');
+
+INSERT INTO dbo.Department 
+VALUES ('Research and Analytics Department', 'RAD');
+
+INSERT INTO dbo.Department 
+VALUES ('Operations Optimization Bureau', 'OOB');
+
+INSERT INTO dbo.Department 
+VALUES ('Strategic Planning and Implementation Team', 'SPIT');
+
+--Наповнення таблиці Position
+INSERT INTO dbo.Position 
+VALUES ('Innovation Strategist', 2100.0000, 25);
+
+INSERT INTO dbo.Position 
+VALUES ('Product Development Specialist', 1900.0000, 20);
+
+INSERT INTO dbo.Position 
+VALUES ('Research Scientist', 2350.0000, 25);
+
+INSERT INTO dbo.Position 
+VALUES ('Customer Experience Manager', 1500.0000, 21);
+
+INSERT INTO dbo.Position 
+VALUES ('Customer Insights Analyst', 1500.0000, 20);
+
+INSERT INTO dbo.Position 
+VALUES ('Service Excellence Coordinator', 1750.0000, 25);
+
+INSERT INTO dbo.Position 
+VALUES ('Data Scientist', 2250.0000, 28);
+
+INSERT INTO dbo.Position 
+VALUES ('Market Research Analyst', 2100.0000, 25);
+
+INSERT INTO dbo.Position 
+VALUES ('Statistical Analyst', 2100.0000, 20);
+
+INSERT INTO dbo.Position 
+VALUES ('Operations Manager', 2000.0000, 25);
+
+INSERT INTO dbo.Position 
+VALUES ('Process Improvement Specialist', 2000.0000, 25);
+
+INSERT INTO dbo.Position 
+VALUES ('Supply Chain Analyst', 1850.0000, 21);
+
+INSERT INTO dbo.Position 
+VALUES ('Strategy Consultant', 2150.0000, 30);
+
+INSERT INTO dbo.Position 
+VALUES ('Project Manager', 2000.0000, 28);
+
+INSERT INTO dbo.Position 
+VALUES ('Implementation Coordinator', 1800.0000, 25);
+
+INSERT INTO dbo.Position 
+VALUES ('Leader', 2600.0000, 25);
+
+--Наповнення таблиці Employee
+INSERT INTO dbo.Employee 
+VALUES (NULL, 'Voronova Natalia Ivanivna', 123456789, 1234567890, '1978-09-20', 'Kyiv, Ukraine', '456 Innovation Avenue, Kyiv, Ukraine', '2021-05-10');
+
+INSERT INTO dbo.Employee 
+VALUES (NULL, 'Kovalenko Ivan Eduardovych', 120876789, 1005678901, '1980-11-15', 'Dnipro, Ukraine', '789 Customer Experience Street, Dnipro, Ukraine', '2020-03-08');
+
+INSERT INTO dbo.Employee 
+VALUES (NULL, 'Petrova Oksana Mykhaylivna', 130876009, 1511890120, '1975-12-05', 'Lviv, Ukraine', '123 Analytics Lane, Lviv, Ukraine', '2022-08-20');
+
+INSERT INTO dbo.Employee 
+VALUES (NULL, 'Ivanov Petro Petrovich', 110806039, 1401850029, '1982-03-25', 'Kharkiv, Ukraine', '456 Operations Avenue, Kharkiv, Ukraine', '2023-01-15');
+
+INSERT INTO dbo.Employee 
+VALUES (NULL, 'Mykhailova Kateryna Stepanivna', 198766039, 1178901234, '1977-07-10', 'Odesa, Ukraine', '789 Strategy Street, Odesa, Ukraine', '2023-04-18');
+
+INSERT INTO dbo.Employee 
+VALUES (NULL, 'Kalyn Viktoriya Viktorivna', 185678903, 2006789012, '1987-12-11', 'Kharkiv, Ukraine', '123 Innovation Street, Kharkiv, Ukraine', '2021-09-05');
+
+INSERT INTO dbo.Employee 
+VALUES (NULL, 'Romanov Andriy Olegovich', 274981001, 4567890123, '1992-06-30', 'Lviv, Ukraine', '456 Development Avenue, Lviv, Ukraine', '2023-03-10');
+
+INSERT INTO dbo.Employee 
+VALUES (NULL, 'Kovalchuk Maria Serhiivna', 201789012, 4789012345, '1985-01-08', 'Kyiv, Ukraine', '789 Research Lane, Kyiv, Ukraine', '2020-11-20');
+
+INSERT INTO dbo.Employee 
+VALUES (NULL, 'Petrov Oleksandr Oleksandrovich', 203451627, 3789012345, '1989-08-18', 'Dnipro, Ukraine', '234 Experience Road, Kyiv Ukraine', '2022-08-15');
+
+INSERT INTO dbo.Employee 
+VALUES (NULL, 'Sokolova Yuliia Vasylivna', 103453678, 7012345678, '1993-04-05', 'Odesa, Ukraine', '567 Insights Avenue, Odesa, Ukraine', '2020-02-13');
+
+INSERT INTO dbo.Employee 
+VALUES (NULL, 'Hryshchenko Pavlo Igorovich', 456772103, 6123433789, '1986-12-22', 'Khmelnytskyi, Ukraine', '890 Service Street, Khmelnytskyi, Ukraine', '2023-02-22');
+
+INSERT INTO dbo.Employee 
+VALUES (NULL, 'Bobyk Kateryna Vasylivna', 204437631, 9011345078, '1994-11-10', 'Khust, Ukraine', '11 Miry, Khust, Ukraine', '2022-02-22');
+
+INSERT INTO dbo.Employee 
+VALUES (NULL, 'Bahuriak Ivanna Ivanivna', 201678901, 2345678901, '2000-11-01', 'Khust, Ukraine', '65 Lvivska, Khust, Ukraine', '2022-02-10');
+
+INSERT INTO dbo.Employee 
+VALUES (NULL, 'Kozlova Natalia Vitalyivna', 321789012, 4761230981, '1990-08-07', 'Sumy, Ukraine', '789 Statistics Street, Sumy, Ukraine', '2021-10-12');
+
+INSERT INTO dbo.Employee 
+VALUES (NULL, 'Hrichka Serhiy Tarasovich', 172890123, 3579514561, '1984-01-28', 'Poltava, Ukraine', '890 Operations Lane, Poltava, Ukraine', '2020-11-12');
+
+INSERT INTO dbo.Employee 
+VALUES (NULL, 'Korsun Alina Olehivna', 345915008, 2208781931, '1999-02-08', 'Vinnytsia, Ukraine', '125 Improvement Street, Vinnytsia, Ukraine', '2021-09-04');
+
+INSERT INTO dbo.Employee 
+VALUES (NULL, 'Horbachev Vitaliy Petrovich', 145523987, 3176381902, '1995-10-20', 'Ternopil, Ukraine', '406 Supply Lane, Ternopil, Ukraine', '2023-03-14');
+
+INSERT INTO dbo.Employee 
+VALUES (NULL, 'Zelensky Yaroslav Evgenovich', 700139473, 1357924608, '1983-12-12', 'Lutsk, Ukraine', '121 Strategy Avenue, Lutsk, Ukraine', '2020-09-30');
+
+INSERT INTO dbo.Employee 
+VALUES (NULL, 'Voloshyna Olena Ivanivna', 455012367, 1526374809, '1996-01-23', 'Ivano-Frankivsk, Ukraine', '034 Project Road, Ivano-Frankivsk, Ukraine', '2023-08-21');
+
+INSERT INTO dbo.Employee 
+VALUES (NULL, 'Pleshinets Denys Mykhailovych', 243157861, 2349875501, '1992-08-08', 'Rivne, Ukraine', '103 Implementation Lane, Rivne, Ukraine', '2022-12-05');
+
+-- Наповнення таблиці HistoryPosition
+INSERT INTO dbo.HistoryPosition
+VALUES ('1', '6', '3', '03.08.2020', '11.11.2022')
+
+INSERT INTO dbo.HistoryPosition
+VALUES ('1', '21', '3', '11.11.2022', NULL)
+
+INSERT INTO dbo.HistoryPosition
+VALUES ('2', '10', '11', '11.20.2020', '01.23.2022')
+
+INSERT INTO dbo.HistoryPosition
+VALUES ('2', '21', '11', '01.23.2022', NULL)
+
+INSERT INTO dbo.HistoryPosition
+VALUES ('3', '12', '13', '02.13.2020', '07.03.2023')
+
+INSERT INTO dbo.HistoryPosition
+VALUES ('3', '21', '13', '07.03.2023', NULL)
+
+INSERT INTO dbo.HistoryPosition
+VALUES ('4', '16', '13', '11.12.2020', '10.17.2023')
+
+INSERT INTO dbo.HistoryPosition
+VALUES ('4', '21', '13', '10.17.2023', NULL)
+
+INSERT INTO dbo.HistoryPosition
+VALUES ('5', '18', '21', '09.30.2020', '04.28.2021')
+
+INSERT INTO dbo.HistoryPosition
+VALUES ('5', '21', '21', '04.28.2021', NULL)
+
+INSERT INTO dbo.HistoryPosition
+VALUES ('1', '6', '1', '05.10.2021', NULL)
+
+INSERT INTO dbo.HistoryPosition
+VALUES ('1', '7', '4', '08.20.2022', NULL)
+
+INSERT INTO dbo.HistoryPosition
+VALUES ('1', '8', '5', '01.15.2023', NULL)
+
+INSERT INTO dbo.HistoryPosition
+VALUES ('2', '9', '6', '04.18.2023', NULL)
+
+INSERT INTO dbo.HistoryPosition
+VALUES ('2', '10', '9', '09.05.2021', NULL)
+
+INSERT INTO dbo.HistoryPosition
+VALUES ('2', '11', '10', '03.10.2023', NULL)
+
+INSERT INTO dbo.HistoryPosition
+VALUES ('3', '12', '12', '08.15.2022', NULL)
+
+INSERT INTO dbo.HistoryPosition
+VALUES ('3', '13', '14', '02.22.2023', NULL)
+
+INSERT INTO dbo.HistoryPosition
+VALUES ('3', '14', '15', '02.22.2022', NULL)
+
+INSERT INTO dbo.HistoryPosition
+VALUES ('4', '15', '16', '02.10.2022', NULL)
+
+INSERT INTO dbo.HistoryPosition
+VALUES ('4', '16', '17', '10.12.2021', NULL)
+
+INSERT INTO dbo.HistoryPosition
+VALUES ('4', '17', '19', '09.04.2021', NULL)
+
+INSERT INTO dbo.HistoryPosition
+VALUES ('5', '18', '20', '03.14.2023', NULL)
+
+INSERT INTO dbo.HistoryPosition
+VALUES ('5', '19', '23', '08.21.2023', NULL)
+
+INSERT INTO dbo.HistoryPosition
+VALUES ('5', '20', '24', '12.05.2022', NULL)
+
+-- Наповнення таблиці Vacation
+INSERT INTO dbo.Vacation
+VALUES ('3', '06.01.2023', '06.25.2023')
+
+INSERT INTO dbo.Vacation
+VALUES ('11', '09.01.2023', '09.25.2023')
+
+INSERT INTO dbo.Vacation
+VALUES ('13', '12.01.2023', '12.25.2023')
+
+INSERT INTO dbo.Vacation
+VALUES ('18', '11.01.2023', '11.25.2023')
+
+INSERT INTO dbo.Vacation
+VALUES ('21', '07.01.2023', '07.25.2023')
