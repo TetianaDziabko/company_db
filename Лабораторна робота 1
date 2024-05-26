@@ -1,3 +1,5 @@
+USE Company_DB
+
 -- Створення таблиці Department
 CREATE TABLE Department (
     ID_department INT PRIMARY KEY,
