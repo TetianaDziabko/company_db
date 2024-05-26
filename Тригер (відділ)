@@ -1,0 +1,48 @@
+CREATE OR ALTER TRIGGER CheckDepartmentHeadTrigger
+ON HistoryPosition
+AFTER INSERT
+AS
+BEGIN
+    DECLARE @DepartmentHeadLastName NVARCHAR(255);
+    DECLARE @NewEmployeeLastName NVARCHAR(255);
+
+    -- Отримуємо прізвище керівника відділу
+    SELECT @DepartmentHeadLastName = SUBSTRING(e.full_name, CHARINDEX(' ', e.full_name) + 1, LEN(e.full_name))
+    FROM HistoryPosition hp
+    JOIN Employee e ON hp.ID_employee = e.ID_employee
+    JOIN Position p ON hp.ID_position = p.ID_position
+    WHERE hp.ID_department IN (SELECT ID_department FROM INSERTED) -- Використання підзапиту для доступу до вставлених ID_department
+    AND p.name_position = 'Leader';
+
+    -- Отримуємо прізвище нового працівника
+    SELECT @NewEmployeeLastName = SUBSTRING(e.full_name, CHARINDEX(' ', e.full_name) + 1, LEN(e.full_name))
+    FROM Employee e
+    WHERE e.ID_employee IN (SELECT ID_employee FROM INSERTED); -- Використання підзапиту для доступу до вставлених ID_employee
+
+    -- Перевіряємо, чи не є новий працівник родичем керівника відділу
+    IF @DepartmentHeadLastName = @NewEmployeeLastName
+    BEGIN
+        -- Видаємо повідомлення про помилку
+        RAISERROR ('Новий працівник не може мати те саме прізвище, що і керівник відділу', 16, 1);
+    END
+
+    -- Перевіряємо, чи немає працівника з таким самим прізвищем у відділі
+    IF EXISTS (
+        SELECT 1
+        FROM INSERTED i
+        JOIN Employee e ON i.ID_employee = e.ID_employee
+        WHERE SUBSTRING(e.full_name, CHARINDEX(' ', e.full_name) + 1, LEN(e.full_name)) = @DepartmentHeadLastName
+        AND i.ID_employee <> (SELECT ID_employee FROM INSERTED WHERE ID_department = i.ID_department)
+    )
+    BEGIN
+        -- Видаємо повідомлення про помилку
+        RAISERROR ('Відділ не може мати двох працівників з однаковим прізвищем', 16, 1);
+    END
+END;
+
+-- Запити для перевірки
+INSERT INTO dbo.Employee
+VALUES ('Hryshchenko Pavlo Igorovich', '241355920', '1234123412', '06.24.1999', 'Ternopil, Ukraine', '40 Saksaganskogo Street, Lviv, Ukraine', '03.11.2022')
+
+INSERT INTO dbo.HistoryPosition
+VALUES ('4', '21', '14', '03.11.2022', NULL)
