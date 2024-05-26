@@ -1,0 +1,94 @@
+USE Company_DB;
+
+DROP PROCEDURE IF EXISTS CalculateDepartmentSalary;
+
+-- Процедура обрахування фонду зарплати за вказаний місяць вказаному відділу
+CREATE PROCEDURE CalculateDepartmentSalary
+    @department_id INT,
+    @month INT,
+    @year INT
+AS
+BEGIN
+    DECLARE @department_name VARCHAR(100);
+    DECLARE @total_salary DECIMAL(10, 2);
+
+    -- Отримання назви відділу
+    SELECT @department_name = abbreviation
+    FROM Department
+    WHERE ID_department = @department_id;
+
+    -- Виведення зарплати для кожного працівника
+    SELECT 
+        e.ID_employee,
+        e.full_name,
+        p.rate,
+        p.rate * 20 AS base_salary_for_month,
+        d.abbreviation AS department_abbreviation,
+        (p.rate * 20 * (1 + (DATEDIFF(YEAR, hp.date_of_appointment, DATEFROMPARTS(@year, @month, 1)) * 0.012))) AS adjusted_salary
+    FROM 
+        Employee e
+    INNER JOIN 
+        (SELECT ID_employee, ID_position, ID_department, date_of_appointment, date_of_exemption
+         FROM HistoryPosition
+         WHERE ID_department = @department_id
+           AND DATEFROMPARTS(@year, @month, 1) BETWEEN date_of_appointment AND ISNULL(date_of_exemption, GETDATE())) hp
+        ON e.ID_employee = hp.ID_employee
+    INNER JOIN 
+        Position p ON hp.ID_position = p.ID_position
+    INNER JOIN 
+        Department d ON hp.ID_department = d.ID_department
+    GROUP BY
+        e.ID_employee, e.full_name, p.rate, d.abbreviation, hp.date_of_appointment;
+
+    -- Обрахунок фонду зарплати з врахуванням робочих років
+    SELECT @total_salary = SUM(p.rate * 20 * (1 + (DATEDIFF(YEAR, hp.date_of_appointment, DATEFROMPARTS(@year, @month, 1)) * 0.012)))
+    FROM Employee e
+    INNER JOIN 
+        (SELECT ID_employee, ID_position, ID_department, date_of_appointment, date_of_exemption
+         FROM HistoryPosition
+         WHERE ID_department = @department_id
+           AND DATEFROMPARTS(@year, @month, 1) BETWEEN date_of_appointment AND ISNULL(date_of_exemption, GETDATE())) hp
+        ON e.ID_employee = hp.ID_employee
+    INNER JOIN 
+        Position p ON hp.ID_position = p.ID_position;
+
+    -- Виведення результату з підписом
+    PRINT 'Фонд зарплати для відділу ' + @department_name + ' у місяці ' + CONVERT(VARCHAR, @month) + '-' + CONVERT(VARCHAR, @year) + ': ' + CONVERT(VARCHAR, @total_salary);
+END;
+
+-- Виклик процедури для тестування
+EXEC CalculateDepartmentSalary @department_id = 4, @month = 11, @year = 2023;
+
+
+DROP PROCEDURE IF EXISTS CalculateAllDepartmentsSalary;
+
+-- Процедура для обрахунку фонду зарплати для всіх відділів
+CREATE PROCEDURE CalculateAllDepartmentsSalary
+AS
+BEGIN
+    DECLARE @department_id INT;
+    DECLARE @current_month INT = MONTH(GETDATE());
+    DECLARE @current_year INT = YEAR(GETDATE());
+
+    -- Курсор для вибору всіх відділів
+    DECLARE department_cursor CURSOR FOR
+        SELECT ID_department FROM Department;
+
+    OPEN department_cursor;
+
+    -- Вибірка ітеративно кожного відділу і виклик першої процедури для нього
+    FETCH NEXT FROM department_cursor INTO @department_id;
+    WHILE @@FETCH_STATUS = 0
+    BEGIN
+        -- Виклик першої процедури з поточним місяцем та роком
+        EXEC CalculateDepartmentSalary @department_id, @current_month, @current_year;
+
+        FETCH NEXT FROM department_cursor INTO @department_id;
+    END;
+
+    CLOSE department_cursor;
+    DEALLOCATE department_cursor;
+END;
+
+-- Виклик процедури для тестування
+EXEC CalculateAllDepartmentsSalary;
