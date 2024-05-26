@@ -1,0 +1,124 @@
+/*SELECT на базі однієї таблиці з використанням сортування, накладенням умов зі зв’язками OR та AND*/
+SELECT *
+FROM Position
+WHERE rate > 40000 AND (name_position = 'Leader' OR name_position = 'Data Scientist')
+ORDER BY rate DESC;
+
+/*SELECT з виводом обчислюваних полів (виразів) в колонках результату.*/
+SELECT *, 
+YEAR(Employee.date_of_employment) as Year
+FROM Employee;
+
+/*SELECT на базі кількох таблиць з використанням сортування, накладенням умов зі зв’язками OR або AND.*/
+SELECT e.ID_employee, e.full_name, v.start_date, v.end_date
+FROM Employee e
+INNER JOIN Vacation v ON e.ID_employee = v.ID_employee
+WHERE v.start_date >= '2023-07-01' AND v.end_date < '2024.01.01'
+ORDER BY v.start_date ASC;
+
+/*SELECT на базі кількох таблиць з типом поєднання Outer Join.*/
+SELECT e.ID_employee, e.full_name, v.start_date, v.end_date
+FROM Employee e
+FULL OUTER JOIN Vacation v ON e.ID_employee = v.ID_employee
+ORDER BY e.full_name ASC, v.start_date ASC;
+
+/*SELECT з використанням оператору Like*/
+SELECT full_name, date_of_birth
+FROM Employee
+WHERE full_name LIKE 'K%';
+
+/*SELECT з використанням оператору Between*/
+SELECT ID_employee, full_name, passport_series, date_of_employment
+FROM Employee
+WHERE date_of_employment BETWEEN '2022-02-22' AND '2023-01-20';
+
+/*SELECT з використанням оператору In*/
+SELECT *
+FROM Employee
+WHERE ID_employee IN (
+    SELECT ID_employee
+    FROM HistoryPosition
+    WHERE ID_department = '1'
+);
+
+/*SELECT з використанням оператору Exists*/
+SELECT ID_employee, full_name, passport_series, place_of_birth
+FROM Employee e
+WHERE EXISTS (
+	SELECT 1
+	FROM Vacation v
+	WHERE e.ID_employee = v.ID_employee
+);
+
+/*SELECT з використанням оператору Any*/
+SELECT full_name
+FROM Employee
+WHERE ID_employee = ANY (SELECT ID_employee FROM HistoryPosition WHERE ID_position = 21);
+
+/*SELECT з використанням підсумовування та групування*/
+SELECT start_date, end_date, DATEDIFF(day, end_date, start_date) AS vacation_duration
+FROM Vacation
+GROUP BY start_date, end_date;
+
+/*SELECT з використанням підсумовування та групування*/
+SELECT e.full_name, d.name_department, p.name_position,
+    COUNT(v.ID_vacation) AS total_vacations
+FROM
+    Employee e
+INNER JOIN HistoryPosition hp ON e.ID_employee = hp.ID_employee AND hp.date_of_exemption IS NULL
+INNER JOIN Department d ON hp.ID_department = d.ID_department
+INNER JOIN Position p ON hp.ID_position = p.ID_position
+LEFT JOIN Vacation v ON e.ID_employee = v.ID_employee
+GROUP BY e.full_name, d.name_department, p.name_position;
+
+/*SELECT запит типу CrossTab*/
+SELECT *
+FROM (
+	SELECT ID_employee,
+		DATEPART(month, start_date) AS mounth_number,
+		COUNT(*) AS vacation_count
+	FROM Vacation
+	WHERE YEAR(start_date) = 2023
+	GROUP BY ID_employee, DATEPART(month, start_date)
+)AS source_table
+PIVOT (
+	SUM(vacation_count)
+	FOR mounth_number IN ([1],[2],[3],[4],[5],[6],[7],[8],[9],[10],[11],[12])
+) AS pivot_table;
+
+/*UPDATE на базі однієї таблиці*/
+UPDATE Position
+SET rate = '52000'
+WHERE ID_position = 21;
+
+/*UPDATE на базі кількох таблиць*/
+UPDATE Vacation
+SET start_date = DATEADD(day, 1, start_date),
+    end_date = DATEADD(day, 1, end_date)
+WHERE ID_employee IN (
+    SELECT e.ID_employee
+    FROM Employee e
+    WHERE e.place_of_birth = 'Kyiv, Ukraine'
+);
+
+/*DELETE для видалення всіх даних з таблиці*/
+DELETE FROM Vacation;
+
+/*DELETE для видалення вибраних записів таблиці*/
+DELETE FROM Vacation WHERE ID_vacation = '1';
+
+/*ієрархічний SELECT запит*/
+SELECT 
+	d.name_department AS name_department,
+    d.abbreviation AS department_abbreviation,
+    p.name_position AS position_name,
+	e.full_name AS employee_name
+FROM 
+    Employee e
+INNER JOIN 
+    HistoryPosition hp ON e.ID_employee = hp.ID_employee AND hp.date_of_exemption IS NULL
+INNER JOIN 
+    Department d ON hp.ID_department = d.ID_department
+INNER JOIN 
+    Position p ON hp.ID_position = p.ID_position
+ORDER BY d.name_department DESC;
