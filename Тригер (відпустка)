@@ -1,0 +1,48 @@
+CREATE OR ALTER TRIGGER CheckVacationLimitTrigger
+ON Vacation
+AFTER INSERT
+AS
+BEGIN
+    DECLARE @DepartmentID INT;
+    DECLARE @TotalEmployees INT;
+    DECLARE @VacationCount INT;
+    DECLARE @VacationLimit INT;
+
+    -- Отримуємо ID відділу працівника, який подає заявку на відпустку
+    SELECT @DepartmentID = hp.ID_department
+    FROM HistoryPosition hp
+    JOIN INSERTED i ON hp.ID_employee = i.ID_employee;
+
+    -- Отримуємо загальну кількість працівників у відділі
+    SELECT @TotalEmployees = COUNT(*)
+    FROM HistoryPosition
+    WHERE ID_department = @DepartmentID;
+
+    -- Отримуємо кількість працівників у відпустці для даного відділу
+    SELECT @VacationCount = COUNT(*)
+    FROM Vacation v
+    JOIN Employee e ON v.ID_employee = e.ID_employee
+    JOIN HistoryPosition hp ON e.ID_employee = hp.ID_employee
+    WHERE hp.ID_department = @DepartmentID
+    AND v.end_date IS NOT NULL; -- Перевірка, щоб відпустка мала встановлену дату закінчення
+
+    -- Обчислюємо ліміт на кількість працівників у відпустці (5% від загальної кількості)
+    SET @VacationLimit = CEILING(@TotalEmployees * 0.05);
+
+    -- Перевіряємо, чи не перевищено ліміт на кількість працівників у відпустці
+    IF @VacationCount > @VacationLimit
+    BEGIN
+        -- Видаємо повідомлення про помилку
+        RAISERROR ('Не може бути більше %d%% працівників відділу у відпустці.', 16, 1, 5);
+    END
+END;
+
+-- Запити для перевірки
+INSERT INTO dbo.Vacation
+VALUES ('1', '07.05.2024', NULL)
+
+INSERT INTO dbo.Vacation
+VALUES ('3', '05.05.2024', NULL)
+
+INSERT INTO dbo.Vacation
+VALUES ('4', '06.05.2024', NULL)
