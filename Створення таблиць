@@ -1,0 +1,57 @@
+-- Створення таблиці Department
+CREATE TABLE Department (
+    ID_department INT PRIMARY KEY,
+    name_department NVARCHAR(100) NOT NULL,
+    abbreviation NVARCHAR(10) NOT NULL
+);
+
+-- Створення таблиці Position
+CREATE TABLE Position (
+    ID_position INT PRIMARY KEY,
+    name_position NVARCHAR(100) NOT NULL,
+    rate MONEY NOT NULL,
+    duration_of_vacation INT NOT NULL
+);
+
+-- Створення таблиці Employee
+CREATE TABLE Employee (
+    ID_employee INT PRIMARY KEY,
+    full_name NVARCHAR(100) NOT NULL,
+    passport_series BIGINT NOT NULL,
+    RNTRC BIGINT NOT NULL,
+    date_of_birth DATE NOT NULL,
+    place_of_birth NVARCHAR(100) NOT NULL,
+    address NVARCHAR(100) NOT NULL,
+    date_of_employment DATE NOT NULL
+);
+
+-- Створення таблиці HistoryPosition
+CREATE TABLE HistoryPosition (
+    ID_history_position INT PRIMARY KEY,
+    ID_department INT NOT NULL,
+    ID_position INT NOT NULL,
+    ID_employee INT NOT NULL,
+    date_of_appointment DATE NOT NULL,
+    date_of_exemption DATE,
+    FOREIGN KEY (ID_department) REFERENCES Department(ID_department),
+    FOREIGN KEY (ID_position) REFERENCES Position(ID_position),
+    FOREIGN KEY (ID_employee) REFERENCES Employee(ID_employee)
+);
+
+-- Створення таблиці Vacation
+CREATE TABLE Vacation (
+    ID_vacation INT PRIMARY KEY,
+    ID_employee INT NOT NULL,
+    start_date DATE NOT NULL,
+    end_date DATE,
+    FOREIGN KEY (ID_employee) REFERENCES Employee(ID_employee)
+);
+
+-- Створення таблиці Salary
+CREATE TABLE Salary (
+    ID_salary INT PRIMARY KEY,
+    ID_employee INT NOT NULL,
+    salary MONEY NOT NULL,
+    date_salaring DATE NOT NULL,
+    FOREIGN KEY (ID_employee) REFERENCES Employee(ID_employee)
+);
