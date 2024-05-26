@@ -1,0 +1,127 @@
+-- Користувач 1: Адміністратор підприємства
+-- Задачі: Управління даними про працівників, відділи, посади, історію посад, відпустки.
+CREATE LOGIN EnterpriseAdmin WITH PASSWORD = 'StrongPassword1';
+CREATE USER EnterpriseAdmin FOR LOGIN EnterpriseAdmin;
+
+-- Користувач 2: Керівник відділу
+-- Задачі: Перегляд та оновлення даних працівників свого відділу, управління відпустками.
+CREATE LOGIN DepartmentHead WITH PASSWORD = 'StrongPassword2';
+CREATE USER DepartmentHead FOR LOGIN DepartmentHead;
+
+-- Користувач 3: Керівник проєкту
+-- Задачі: Управління проєктами, перегляд даних працівників.
+CREATE LOGIN ProjectManager WITH PASSWORD = 'StrongPassword3';
+CREATE USER ProjectManager FOR LOGIN ProjectManager;
+
+-- Користувач 4: Співробітник
+-- Задачі: Перегляд особистих даних та історії посад, перегляд відпусток.
+CREATE LOGIN Employee WITH PASSWORD = 'StrongPassword4';
+CREATE USER Employee FOR LOGIN Employee;
+
+-- Привілеї для користувача EnterpriseAdmin
+GRANT ALTER, DELETE, INSERT, SELECT, UPDATE ON Employee TO EnterpriseAdmin;
+GRANT ALTER, DELETE, INSERT, SELECT, UPDATE ON Department TO EnterpriseAdmin;
+GRANT ALTER, DELETE, INSERT, SELECT, UPDATE ON Position TO EnterpriseAdmin;
+GRANT ALTER, DELETE, INSERT, SELECT, UPDATE ON HistoryPosition TO EnterpriseAdmin;
+GRANT ALTER, DELETE, INSERT, SELECT, UPDATE ON Vacation TO EnterpriseAdmin;
+
+-- Привілеї для користувача DepartmentHead
+GRANT SELECT, UPDATE ON Employee TO DepartmentHead;
+GRANT SELECT, UPDATE ON Vacation TO DepartmentHead;
+
+-- Привілеї для користувача ProjectManager
+GRANT SELECT, UPDATE ON Employee TO ProjectManager;
+
+-- Привілеї для користувача Employee
+GRANT SELECT ON Employee TO Employee;
+GRANT SELECT ON HistoryPosition TO Employee;
+GRANT SELECT ON Vacation TO Employee;
+
+-- Роль 1: Адміністратор підприємства
+-- Задачі: Управління працівниками та відпустками.
+CREATE ROLE EnterpriseAdminRole;
+
+-- Роль 2: Керівник відділу
+-- Задачі: Управління працівниками свого відділу, відпустками працівників.
+CREATE ROLE DepartmentHeadRole;
+
+-- Роль 3: Керівник проєкту
+-- Задачі: Управління проєктами, перегляд даних працівників.
+CREATE ROLE ProjectManagerRole;
+
+-- Привілеї для ролі EnterpriseAdminRole
+GRANT ALTER, DELETE, INSERT, SELECT, UPDATE ON Employee TO EnterpriseAdminRole;
+GRANT ALTER, DELETE, INSERT, SELECT, UPDATE ON Department TO EnterpriseAdminRole;
+GRANT ALTER, DELETE, INSERT, SELECT, UPDATE ON Position TO EnterpriseAdminRole;
+GRANT ALTER, DELETE, INSERT, SELECT, UPDATE ON HistoryPosition TO EnterpriseAdminRole;
+GRANT ALTER, DELETE, INSERT, SELECT, UPDATE ON Vacation TO EnterpriseAdminRole;
+
+-- Привілеї для ролі DepartmentHeadRole
+GRANT SELECT, UPDATE ON Employee TO DepartmentHeadRole;
+GRANT SELECT, UPDATE ON Vacation TO DepartmentHeadRole;
+
+-- Привілеї для ролі ProjectManagerRole
+GRANT SELECT, UPDATE ON Employee TO ProjectManagerRole;
+
+-- Призначення ролі EnterpriseAdminRole користувачу EnterpriseAdmin
+ALTER ROLE EnterpriseAdminRole ADD MEMBER EnterpriseAdmin;
+
+-- Призначення ролі DepartmentHeadRole користувачу DepartmentHead
+ALTER ROLE DepartmentHeadRole ADD MEMBER DepartmentHead;
+
+-- Призначення ролі ProjectManagerRole користувачу ProjectManager
+ALTER ROLE ProjectManagerRole ADD MEMBER ProjectManager;
+
+-- Відкликання привілеїв для користувача DepartmentHead
+REVOKE SELECT, UPDATE ON Vacation FROM DepartmentHead;
+
+-- Відкликання ролі ProjectManagerRole у користувача ProjectManager
+ALTER ROLE ProjectManagerRole DROP MEMBER ProjectManager;
+
+-- Видалення ролі ProjectManagerRole
+DROP ROLE ProjectManagerRole;
+
+-- Видалення користувача ProjectManager
+DROP USER ProjectManager;
+
+-- Перевірка створених користувачів у базі даних
+SELECT name 
+FROM sys.database_principals 
+WHERE type IN ('S', 'U');
+
+-- Перевірка наявності ролей у базі даних
+SELECT name 
+FROM sys.database_principals 
+WHERE type = 'R';
+
+-- Перевірка наданих привілеїв користувачу EnterpriseAdmin
+SELECT * 
+FROM sys.database_permissions 
+WHERE grantee_principal_id = USER_ID('EnterpriseAdmin');
+
+-- Перевірка наданих привілеїв користувачу DepartmentHead
+SELECT * 
+FROM sys.database_permissions 
+WHERE grantee_principal_id = USER_ID('DepartmentHead');
+
+-- Перевірка приналежності ролей користувачам
+SELECT dp.name AS UserName, dp.type_desc AS UserType, dr.name AS RoleName
+FROM sys.database_principals dp
+INNER JOIN sys.database_role_members drm ON dp.principal_id = drm.member_principal_id
+INNER JOIN sys.database_principals dr ON drm.role_principal_id = dr.principal_id
+WHERE dp.type_desc IN ('SQL_USER', 'WINDOWS_USER') AND dr.type_desc = 'DATABASE_ROLE';
+
+-- Перевірка наданих привілеїв ролі EnterpriseAdminRole
+SELECT * 
+FROM sys.database_permissions 
+WHERE grantee_principal_id = DATABASE_PRINCIPAL_ID('EnterpriseAdminRole');
+
+-- Перевірка наявності користувача ProjectManager (після видалення)
+SELECT name 
+FROM sys.database_principals 
+WHERE type IN ('S', 'U') AND name = 'ProjectManager';
+
+-- Перевірка наявності ролі ProjectManagerRole після видалення
+SELECT name 
+FROM sys.database_principals 
+WHERE type = 'R' AND name = 'ProjectManagerRole';
